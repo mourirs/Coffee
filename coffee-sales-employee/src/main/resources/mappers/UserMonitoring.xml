@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coffee.sales.employee.dao.UserMonitoringMapper">
+
+    <select id="userMonitoringAllInFo" resultType="userMonitoring">
+        SELECT
+        cf_user.uid,
+        cf_user.uname,
+        cf_user.upwd,
+        cf_user.uemail,
+        cf_user.uphone,
+        cf_user.ustate
+        FROM
+        cf_user
+    </select>
+
+    <update id="updateUserMonitoringTypeToFrozen" parameterType="int">
+    UPDATE `coffee`.`cf_user`
+    SET `ustate` = 0 WHERE `uid` = #{id}
+    </update>
+
+    <update id="updateUserMonitoringTypeToThaw" parameterType="int">
+    UPDATE `coffee`.`cf_user`
+    SET `ustate` = 1 WHERE `uid` = #{id}
+    </update>
+
+</mapper>

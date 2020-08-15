@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Site Title -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" th:href="@{../bootstrap/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{../css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{../css/main.css}">
+    <script th:src="@{../jquery/jquery-1.9.1.min.js}"></script>
+    <script th:src="@{../bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{../script/docs.min.js}"></script>
+    <script th:src="@{../jquery/bootstrap-paginator.js}"></script>
+    <script>
+
+        let options = {};
+        $().ready(function(){
+            options.currentPage = [[${page.pageNum}]] ,
+                options.totalPages = [[${page.pages}]],
+                options.onPageClicked = function(event, originalEvent, type, page){
+                    serch(page)
+                }
+            $('#pagenums').bootstrapPaginator(options);
+        })
+        function serch(page){
+            let param = {"pageNum": page};
+            $.getJSON("../../user/getPage",param,function(page){
+
+                //获取当前页码和总页数
+                options.currentPage = page.pageNum;
+                options.totalPages = page.pages;
+
+                var list = page.list;
+                var html = '';
+                $('#tbody').html('');
+                for(let i=0; i< list.length ; i++) {
+                    html = html + "<tr><td>"+ list[i].id    +"</td><td>"+ list[i].loginAcct +"</td><td>"+ list[i].userName +"</td><td>"+list[i].email
+                        +"</td><td><button type='button' class='btn btn-success btn-xs' onclick='role(this)'><i class=' glyphicon glyphicon-check'></i></button>"
+                        + "<button type='button' class='btn btn-primary btn-xs' onclick='update(this)'><i class=' glyphicon glyphicon-pencil'></i></button>"
+                        +"<button type='button' class='btn btn-danger btn-xs' onclick='deleteone(this)'><i class=' glyphicon glyphicon-remove'></i></button></td></tr>";
+                }
+                $('#tbody').html( html );
+
+                $('#pagenums').bootstrapPaginator(options);
+            })
+        }
+    </script>
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background: #F4F4F4;
+        }
+
+        table tbody td:nth-child(even) {
+            color: #C00;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" >
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="">POI-COFFEE - 员工维护</a></div>
+        </div>
+        <div th:replace="user-head.html"></div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="user-left.html"></div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table  table-bordered">
+                            <thead>
+                            <tr >
+                                <th width="30"></th>
+                                <th>账号</th>
+                                <th>名称</th>
+                                <th>邮箱地址</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody">
+
+                            <tr th:each="user : ${page.list } " >
+                                    <td th:text="${user.id }"></td>
+                                    <td th:text="${user.loginAcct }"></td>
+                                    <td th:text="${user.userName }"></td>
+                                    <td th:text="${user.email }">$</td>
+                                    <td>
+                                        <button type="button" class="btn btn-success btn-xs" onclick='role(this)'><i class=" glyphicon glyphicon-check"></i></button>
+                                        <button type="button" class="btn btn-primary btn-xs" onclick="update(this)"><i class=" glyphicon glyphicon-pencil"></i></button>
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="deleteone(this)"><i class=" glyphicon glyphicon-remove"></i></button>
+                                    </td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div id="pagenums">
+                        </div>
+                        <button type="button" class="btn btn-primary" style="float:right;" onclick="$('#myModal1').modal('show')"><i class="glyphicon glyphicon-plus"></i> 新增</button>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--             模态框                    -->
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">新增</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form role="form"  id="addForm">
+                            <div class="form-group">
+                                <label for="userId1">登陆账号</label>
+                                <input type="text" class="form-control" id="userId1" placeholder="请输入登陆账号" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="userName1">用户密码</label>
+                                <input type="password" class="form-control" id="userpassword1" placeholder="请输入用户密码" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="userName1">用户名称</label>
+                                <input type="text" class="form-control" id="userName1" placeholder="请输入用户名称" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="userEmail1">邮箱地址</label>
+                                <input type="email" class="form-control" id="userEmail1" placeholder="请输入邮箱地址" email required><br/>
+                                <span style="color: red;" id="useremailspan1"></span>
+                                <p class="help-block label label-warning">请输入合法的邮箱地址, 格式为： xxxx@xxxx.com</p>
+                            </div>
+                            <button type="button" id="add" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> 新增</button>
+                            <button type="reset" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 重置</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--                  模态框                    -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabe2">修改</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form role="form" id="updateForm" >
+                            <input type="hidden" id="hideid">
+                            <div class="form-group">
+                                <label for="userId2">登陆账号</label>
+                                <input type="text" class="form-control" id="userId2" placeholder="" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="userName2">用户名称</label>
+                                <input type="text" class="form-control" id="userName2" placeholder="" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="userEmail2">邮箱地址</label>
+                                <input type="email" class="form-control" id="userEmail2" placeholder="xxxx@xxxx.com" required email><br/>
+                                <span style="color: red;" id="useremailspan2"></span>
+                                <p class="help-block label label-warning">请输入合法的邮箱地址, 格式为： xxxx@xxxx.com</p>
+                            </div>
+                            <button type="button" onclick="updateUser()" class="btn btn-success"><i class="glyphicon glyphicon-edit"></i> 修改</button>
+                            <button type="reset" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 重置</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(function () {
+        $(".list-group-item").click(function(){
+            if ( $(this).find("ul") ) {
+                $(this).toggleClass("tree-closed");
+                if ( $(this).hasClass("tree-closed") ) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+    });
+    function update(that){
+        var id = $(that).parents("tr").children().eq(0).html();
+        $('#hideid').val(id);
+        $('#myModal2').modal('show');
+    }
+    $('#allcheck').click(this,function(){
+        $("input[type='checkbox']").prop("checked",this.checked);
+    })
+    function role(that){
+        var id = $(that).parents('tr').children().first().text();
+        window.location.href = "../../user/role?userid="+id;
+    }
+
+    $('#add').click(function(){
+        var parten = /^[a-z0-9](\w|\.|-)*@([a-z0-9]+-?[a-z0-9]+\.){1,3}[a-z]{2,4}$/i;
+        var email = $('#userEmail2').val();
+        var boo = true;
+        if(email.match(parten) == null){
+            boo = false;
+            $('#useremailspan2').html('邮箱格式有问题')
+        }else{
+            $('#useremailspan2').html('')
+        }
+        if(boo){
+            var loginAcct = $('#userId2').val();
+            var userName = $('#userName2').val();
+            var userPassword = $('#userpassword1').val();
+            var email = $('#userEmail2').val();
+            var param = {
+                "loginAcct" : loginAcct,
+                "userName" : userName,
+                "userPassword" : userPassword,
+                "email" : email
+            }
+            $.ajax(
+                {
+                    url: "../../user/save",
+                    type: "post",
+                    data: param,
+                    datatype: "json",
+                    success: function (data) {
+                        alert(data)
+                        $('#myModal1').modal('hide');
+                        serch(1);
+                    },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    }
+                }
+            );
+        }
+    })
+    function updateUser(){
+        var parten = /^[a-z0-9](\w|\.|-)*@([a-z0-9]+-?[a-z0-9]+\.){1,3}[a-z]{2,4}$/i;
+        var email = $('#userEmail2').val();
+        var boo = true;
+        if(email.match(parten) == null){
+            boo = false;
+            $('#useremailspan2').html('邮箱格式有问题')
+        }else{
+            $('#useremailspan2').html('')
+        }
+        if(boo) {
+            var userid = $('#hideid').val();
+            var loginAcct = $('#userId2').val();
+            var userName = $('#userName2').val();
+            var email = $('#userEmail2').val();
+            var param = {
+                "id": userid,
+                "loginAcct": loginAcct,
+                "userName": userName,
+                "email": email
+            }
+            $.ajax(
+                {
+                    url: "../../user/updateUser",
+                    type: "post",
+                    data: param,
+                    datatype: "json",
+                    success: function (data) {
+                        alert(data)
+                        $('#myModal2').modal('hide');
+                        serch(1);
+                    },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    }
+                }
+            );
+        }
+    }
+    function deleteone(that){
+        var id = $(that).parents('tr').children().eq(0).html();
+        var ids = new Array();
+        ids.push(id);
+        var param = {"ids":ids}
+        // $.post("../user/delete",param,function(data){
+        //     alert(data);
+        //     serch(1);
+        // })
+        $.ajax(
+            {
+                url: "../../user/delete",
+                type: "post",
+                data: {"ids":ids},
+                datatype: "json",
+                success: function (data) {
+                    alert(data)
+                    serch(1);
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                }
+            }
+        );
+    }
+</script>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $(".list-group-item").click(function () {
+            if ($(this).find("ul")) {
+                $(this).toggleClass("tree-closed");
+                if ($(this).hasClass("tree-closed")) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

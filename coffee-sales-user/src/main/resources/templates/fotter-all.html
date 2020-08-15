@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<div th:fragment="fotter-all">
+    <div class="table-book">
+        <div class="container">
+            <div class="book-info wow fadeInDown animated" data-wow-delay=".5s">
+                <div class="book-left">
+                    <h2 class="wow fadeInLeftBig animated" data-wow-delay=".5s">Book Your Coffee Now </h2>
+                    <p class="wow fadeInLeftBig animated" data-wow-delay=".5s">Call NOW to our toll free number </p>
+                </div>
+                <div class="book-right">
+                    <h3 class="wow fadeInRightBig animated" data-wow-delay=".5s">+88888888888</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <span class="bg-text bg-right">B</span>
+        </div>
+    </div>
+    <!--//table-book-->
+    <!--footer-->
+    <div class="footer">
+        <div class="container">
+            <div class="col-md-4 footer-left wow fadeInDown animated" data-wow-delay=".5s">
+                <h4>传送门</h4>
+                <ul>
+                    <li><a th:href="@{shopping}"><i class="glyphicon glyphicon-chevron-right"></i> Shopping</a></li>
+                    <li><a th:href="@{shoppingCar}"><i class="glyphicon glyphicon-chevron-right"></i> Shopping Car</a>
+                    </li>
+                    <li><a th:href="@{orderInFo}"><i class="glyphicon glyphicon-chevron-right"></i> Order</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 footer-left wow fadeInDown animated" data-wow-delay=".5s">
+                <h4>关于我们</h4>
+                <ul>
+                    <li><a th:href="@{information}"><i class="glyphicon glyphicon-chevron-right"></i> My Information</a>
+                    </li>
+                    <li><a th:href="@{address}"><i class="glyphicon glyphicon-chevron-right"></i> Address</a></li>
+                    <li><a th:href="@{contact}"><i class="glyphicon glyphicon-chevron-right"></i> Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 footer-right wow fadeInDown animated" data-wow-delay=".5s">
+                <h4>联系我们</h4>
+                <div class="subscribe">
+                    <form>
+                        <input type="text" value="Email" required="">
+                        <input type="submit" value="">
+                    </form>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="footer-copy wow fadeInUp animated" data-wow-delay=".5s">
+                <p>Copyright &copy; 2020.Poi Coffee All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+    <!--//footer-->
+    <!--smooth-scrolling-of-move-up-->
+    <a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
+</div>
+</html>

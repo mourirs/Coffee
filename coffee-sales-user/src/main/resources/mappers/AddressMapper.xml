@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coffee.sales.user.dao.AddressMapper">
+
+    <resultMap id="address" type="address">
+        <id column="aid" property="aId"/>
+        <result column="uid" property="uId"/>
+        <result column="area" property="area"/>
+        <result column="detailedarea" property="detailedArea"/>
+        <result column="postalcode" property="postalCode"/>
+        <result column="consignee" property="consignee"/>
+        <result column="consigneephone" property="consigneePhone"/>
+    </resultMap>
+
+    <insert id="addNewAddress" parameterType="address" useGeneratedKeys="true" keyProperty="aId">
+        INSERT INTO `coffee`.`cf_address` ( `uid`, `area`, `detailedarea`, `postalcode`, `consignee`, `consigneephone` )
+            VALUES
+	    ( #{uId}, #{area}, #{detailedArea}, #{postalCode}, #{consignee}, #{consigneePhone} )
+    </insert>
+
+    <select id="addressList" parameterType="int" resultType="address">
+        SELECT
+        cf_address.aid,
+        cf_address.uid,
+        cf_address.area,
+        cf_address.detailedarea,
+        cf_address.postalcode,
+        cf_address.consignee,
+        cf_address.consigneephone
+        FROM
+        cf_address
+        WHERE cf_address.uid = #{id}
+    </select>
+
+    <delete id="deleteAddress" parameterType="int">
+        DELETE FROM cf_address WHERE cf_address.aid = #{id}
+    </delete>
+
+    <update id="updateAddress" parameterType="address">
+        UPDATE `coffee`.`cf_address` SET
+        `area` = #{area},
+        `detailedarea` = #{detailedArea},
+        `postalcode` = #{postalCode},
+        `consignee` = #{consignee},
+        `consigneephone` = #{consigneePhone}
+        WHERE
+	    `aid` = #{aId}
+    </update>
+</mapper>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Shopping</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link th:href="@{css/bootstrap.css}" type="text/css" rel="stylesheet" media="all">
+    <link th:href="@{css/style.css}" type="text/css" rel="stylesheet" media="all">
+    <script th:src="@{js/jquery-3.4.1.js}"></script>
+    <link th:href='@{fonts/Aladin-Fonts.css}' rel='stylesheet' type='text/css'/>
+    <link th:href="@{css/animate.css}" rel="stylesheet" type="text/css" media="all">
+    <link rel="stylesheet" th:href="@{css/element.css}">
+    <link rel="stylesheet" th:href="@{css/poi-shopping.css}">
+    <script th:src="@{js/vue.js}"></script>
+    <script th:src="@{js/element.js}"></script>
+    <script th:src="@{js/axios.js}"></script>
+    <script th:src="@{js/dataParse.js}"></script>
+</head>
+<body>
+<!--banner-->
+<div class="banner about-bnr">
+    <div class="bnr-img">
+        <img class="wow fadeInLeftBig animated" data-wow-delay=".5s" src="images/a.png" alt=""/>
+    </div>
+    <div th:replace="top-list.html"></div>
+    <div class="banner-text">
+        <h1 class="wow fadeInDown animated" data-wow-delay=".5s"><a th:href="@{index}">POI - Coffee </a></h1>
+        <h2 class="wow fadeInUp animated" data-wow-delay=".5s"><a th:href="@{index}">主页</a> / 购物</h2>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div id="app" style="margin-bottom: 100px">
+    <div class="container" style="margin-top: 20px; position: relative;">
+        <h4 class="title">SHOPPING</h4>
+        <h3 class="title1">START <span>YOUR</span>COFFEE JOURNEY</h3>
+        <el-collapse v-model="activeNames" v-if="collapseTitle.length != 0">
+            <el-collapse-item :title="collapseTitle[0].ytype" name="0">
+                <show :yTId="collapseTitle[0].ytid"></show>
+            </el-collapse-item>
+            <el-collapse-item :title="collapseTitle[1].ytype" name="1">
+                <show :yTId="collapseTitle[1].ytid"></show>
+            </el-collapse-item>
+            <el-collapse-item :title="collapseTitle[2].ytype" name="2">
+                <show :yTId="collapseTitle[2].ytid"></show>
+            </el-collapse-item>
+        </el-collapse>
+    </div>
+</div>
+
+<template id="show">
+    <div>
+        <div class="container" style="margin-top: 20px; position: relative;">
+            <div class="row">
+                <slot :data="commodity">
+                    <div class="col-md-3 col-sm-6" v-for="(item,index) in commodity">
+                        <div class="product-grid">
+                            <div class="product-image">
+                                <a href="#" class="image">
+                                    <img class="pic-1" :src="item.yimage" alt="">
+                                </a>
+                                <span class="product-new-label">new</span>
+                            </div>
+                            <div class="product-content">
+                                <h3 class="title"><a href="#">{{item.yname}}</a></h3>
+                                <div class="price">{{item.yprice | showPrice}}</div>
+                                <a class="add-to-cart" @click="addToCart(index)">
+                                    <i class="el-icon-shopping-cart-2"></i> <span>ADD TO CART</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </slot>
+            </div>
+        </div>
+        <div style="height: 50px; position: relative;">
+            <el-pagination
+                    small
+                    layout="prev, pager, next"
+                    :total="total"
+                    :current-page="currentPage"
+                    :page-size="pageSize"
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    style="position: absolute; left:42%;">
+            </el-pagination>
+        </div>
+    </div>
+</template>
+
+<div th:replace="fotter-all.html"></div>
+<script th:src="@{js/shopping.js}">
+</script>
+</body>
+</html>

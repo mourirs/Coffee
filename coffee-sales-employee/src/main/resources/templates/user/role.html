@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Site Title -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" th:href="@{../bootstrap/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{../css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{../css/main.css}">
+    <script th:src="@{../jquery/jquery-1.9.1.min.js}"></script>
+    <script th:src="@{../bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{../script/docs.min.js}"></script>
+    <script th:src="@{../jquery/bootstrap-paginator.js}"></script>
+
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background: #F4F4F4;
+        }
+
+        table tbody td:nth-child(even) {
+            color: #C00;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="">POI-COFFEE - 角色维护</a></div>
+        </div>
+        <div th:replace="user-head.html"></div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="user-left.html"></div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table  table-bordered">
+                            <thead>
+                            <tr>
+                                <th width="30"></th>
+                                <th>名称</th>
+                                <th width="100">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody">
+                            </tbody>
+                        </table>
+                        <div id="pagenums">
+                        </div>
+                        <button type="button" class="btn btn-primary" style="float:right;"
+                                onclick="add()"><i class="glyphicon glyphicon-plus"></i> 新增
+                        </button>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--             模态框                    -->
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">新增</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form role="form" id="addForm">
+                            <div class="form-group">
+                                <label for="name1">名称</label>
+                                <input type="text" class="form-control" id="name1" placeholder="请输入角色名称" required>
+                            </div>
+                            <button type="button" id="add" class="btn btn-success"><i
+                                    class="glyphicon glyphicon-plus"></i> 新增
+                            </button>
+                            <button type="reset" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 重置
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--             模态框                    -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabe2">新增</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form role="form" id="updateForm">
+                            <input type="hidden" id="hideid">
+                            <div class="form-group">
+                                <label for="name1">名称</label>
+                                <input type="text" class="form-control" id="name2" placeholder="请输入角色名称" required>
+                            </div>
+                            <button type="button" id="update" class="btn btn-success" onclick="updateRole()"><i
+                                    class="glyphicon glyphicon-plus"></i> 修改
+                            </button>
+                            <button type="reset" class="btn btn-danger"><i class="glyphicon glyphicon-refresh"></i> 重置
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+
+    var options = {}
+    options.onPageClicked = function (event, originalEvent, type, page) {
+        serch(page)
+    }
+
+    function serch(page) {
+        var param = {"pageNum": page}
+        $.getJSON("../../rolecont/getPage", param, function (page) {
+            //获取当前页码和总页数
+            options.currentPage = page.pageNum;
+            options.totalPages = page.pages;
+            var list = page.list;
+            var html = '';
+            $('#tbody').html('');
+            for (var i = 0; i < list.length; i++) {
+                html = html + "<tr><td>" + list[i].id + "</td><td>" + list[i].name
+                    + "</td><td><button type='button' class='btn btn-success btn-xs' onclick='permission(this)' ><i class=' glyphicon glyphicon-check'></i>"
+                    + "<button type='button' class='btn btn-primary btn-xs' onclick='update(this)'><i class=' glyphicon glyphicon-pencil'></i></button>"
+                    + "<button type='button' class='btn btn-danger btn-xs' onclick='deleteOne(this)'><i class=' glyphicon glyphicon-remove'></i></button></td></tr>";
+            }
+            $('#tbody').html(html);
+            $('#pagenums').bootstrapPaginator(options);
+        })
+    }
+
+    serch(1);
+
+    $('#allcheck').click(this, function () {
+        $("input[type='checkbox']").prop("checked", this.checked);
+    })
+    $(function () {
+        $(".list-group-item").click(function () {
+            if ($(this).find("ul")) {
+                $(this).toggleClass("tree-closed");
+                if ($(this).hasClass("tree-closed")) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+    });
+
+    function add() {
+        $('#name1').val('');
+        $('#myModal1').modal('show');
+    }
+
+    $('#add').click(function () {
+        var name = $('#name1').val();
+        $.ajax(
+            {
+                url: "../../rolecont/saveRole",
+                type: "post",
+                data: {'name': name},
+                datatype: "json",
+                success: function (data) {
+                    alert(data)
+                    $('#myModal1').modal('hide');
+                    serch(1);
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                }
+            }
+        );
+    })
+
+    function update(that) {
+        $('#name2').val('');
+        var id = $(that).parents("tr").children().eq(0).html();
+        $('#hideid').val(id);
+        $('#myModal2').modal('show');
+    }
+
+    function updateRole() {
+        var roleid = $('#hideid').val();
+        var name = $('#name2').val();
+        var param = {
+            "id": roleid,
+            "name": name
+        }
+        $.ajax(
+            {
+                url: "../../rolecont/updateRole",
+                type: "post",
+                data: param,
+                datatype: "json",
+                success: function (data) {
+                    alert(data)
+                    $('#myModal2').modal('hide');
+                    serch(1);
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                }
+            }
+        );
+    }
+
+    function deleteOne(that) {
+        var id = $(that).parents('tr').children().eq(0).html();
+        var ids = new Array();
+        ids.push(id);
+        var param = {"ids": ids}
+        $.ajax(
+            {
+                url: "../../rolecont/deleteRole",
+                type: "post",
+                data: param,
+                datatype: "json",
+                success: function (data) {
+                    alert(data)
+                    serch(1);
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                }
+            }
+        );
+    }
+
+    function permission(that) {
+        var id = $(that).parents("tr").children().eq(0).html();
+        // $.get("../../rolecont/permission",{"id" : id});
+        window.location.href = "../../rolecont/permission?id=" + id;
+    }
+</script>
+</body>
+</html>

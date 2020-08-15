@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link th:href="@{css/bootstrap.css}" type="text/css" rel="stylesheet" media="all">
+    <link th:href="@{css/style.css}" type="text/css" rel="stylesheet" media="all">
+    <link th:href="@{css/popuo-box.css}" rel="stylesheet" type="text/css" media="all"/>
+    <script th:src="@{js/jquery-3.4.1.js}"></script>
+    <link th:href='@{fonts/Aladin-Fonts.css}' rel='stylesheet' type='text/css'/>
+    <link th:href="@{css/animate.css}" rel="stylesheet" type="text/css" media="all">
+    <script th:src="@{js/vue.js}"></script>
+</head>
+<body>
+<!--banner-->
+<div class="banner">
+    <div class="bnr-img">
+        <img class="wow fadeInLeftBig animated" data-wow-delay=".5s" src="images/a.png" alt=""/>
+    </div>
+    <div th:replace="top-list.html"></div>
+    <div class="banner-text">
+        <h1 class="wow fadeInDown animated" data-wow-delay=".5s"><a th:href="@{index}">POI - Coffee</a></h1>
+        <p class="wow zoomIn animated" data-wow-delay=".5s">咖啡孕育了咖啡文化。1615年后培尼西亚开始，
+            向欧洲全土散播咖啡.地股强热当然在各地掀起磨擦。在罗马也引起伊斯兰教徒的饮料带给基督教徒饮用。
+            当时的法王克雷门八世“虽说是恶魔的饮料却是这般美味可口。将这种饮料让异教徒独占了真是可惜。
+            ”因此接受了咖啡让前来施受洗礼的基督教徒饮用。
+            在英国有无数的咖啡屋，在绅士们的社交场所颇受欢迎。
+        </p>
+        <div class="pop-up">
+            <a class="book popup-with-zoom-anim button-isi zoomIn animated" data-wow-delay=".5s" th:href="@{shopping}">预定</a>
+        </div>
+        <img class="wow zoomIn animated" data-wow-delay=".5s" src="images/img1.png" alt=""/>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<!--//banner-->
+<!--welcome-->
+<div class="welcome">
+    <div class="container">
+        <div class="col-md-7 welcome-left">
+            <h4 class="title wow fadeInLeft animated" data-wow-delay=".5s">欢迎! </h4>
+            <h3 class="title1 wow fadeInLeft animated" data-wow-delay=".5s">Best Coffee <br><span>IS</span> POI-Coffee
+            </h3>
+        </div>
+        <div class="col-md-5 welcome-right wow fadeInRightBig animated" data-wow-delay=".5s">
+            <h5>咖啡的功效 </h5>
+            <p class="data">咖啡是公认的健康饮品，咖啡因会刺激大脑皮质，消除睡意，增加感觉与思考力以及可作调节心脏机能的强心剂，
+                此外，咖啡还可：开胃助食，防止胃下垂；利尿除湿，促进肾脏机能；活血化瘀，溶血及阻止血栓形成，增强血管收缩，降低中风机；
+                定肺喘，减少气喘病的发作；减肥抗衰老；预防胆结石。黑咖啡有抗氧化作用，有助于抗癌、抗衰老。
+                另外，科学家在调查中发现，不喝咖啡者，其患帕金森病的危险性要比每天喝5杯以上咖啡的人高出5倍，喝咖啡者不易得帕金森病。</p>
+        </div>
+        <span class="bg-text">W</span>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!--//welcome-->
+<!--services-->
+<div class="services" id="app">
+    <div class="container">
+        <div class="col-md-5 services-right">
+            <h4 class="title wow fadeInRight animated" data-wow-delay=".5s">服务</h4>
+            <h3 class="title1 wow fadeInRight animated" data-wow-delay=".5s"></h3>
+            <p class="data wow fadeInRight animated" data-wow-delay=".5s">欢迎来到POI-Coffee网上商城
+            </p>
+        </div>
+        <div class="col-md-7 services-left">
+            <div class="col-md-4 services-grid wow fadeInDown animated" data-wow-delay=".5s" @click="shoppingCar()">
+                <span class="glyphicon glyphicon-heart effect-1" aria-hidden="true"></span>
+                <h5>Shopping Car</h5>
+                <p>购 物 车</p>
+            </div>
+            <div class="col-md-4 services-grid wow fadeInDown animated" data-wow-delay=".5s" @click="order()">
+                <span class="glyphicon glyphicon-list-alt effect-1" aria-hidden="true"></span>
+                <h5>My Order</h5>
+                <p>订 单 信 息</p>
+            </div>
+            <div class="col-md-4 services-grid wow fadeInDown animated" data-wow-delay=".5s" @click="shopping()">
+                <span class="glyphicon glyphicon-cutlery effect-1" aria-hidden="true"></span>
+                <h5>Shopping Goods</h5>
+                <p>商 城</p>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <span class="bg-text bg-right">S</span>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!--//services-->
+<!--popular-->
+<div class="popular">
+    <div class="container">
+        <div class="col-md-7 popular-left">
+            <h4 class="title wow fadeInLeft animated" data-wow-delay=".5s">咖啡Show </h4>
+            <h3 class="title1 wow fadeInLeft animated" data-wow-delay=".5s">奶茶咖啡<br><span>给你</span>一天好心情</h3>
+            <p class="data wow fadeInLeft animated" data-wow-delay=".5s">奶茶至今最少已有千年历史。
+                奶茶兼具牛奶和茶的双重营养，是家常美食之一，风行世界。奶茶品种包括了奶茶粉， 冰奶茶，热奶茶等。
+                制作奶茶是采用天然牛奶及茶。牛奶含丰富的蛋白、脂肪等多种高级营养物质。
+                茶中含三百多种对人有益的化学成份。可以去油腻、助消化、益思提神、利尿解毒、消除疲劳。</p>
+        </div>
+        <div class="col-md-5 popular-right wow fadeInRight animated" data-wow-delay=".5s">
+            <div class="col-md-6 popular-grids">
+                <img src="images/img2.jpg" class="img-responsive zoom-img" alt="">
+            </div>
+            <div class="col-md-6 popular-grids">
+                <img src="images/img3.jpg" class="img-responsive zoom-img" alt="">
+            </div>
+            <div class="col-md-6 popular-grids">
+                <img src="images/img4.jpg" class="img-responsive zoom-img" alt="">
+            </div>
+            <div class="col-md-6 popular-grids">
+                <img src="images/img5.jpg" class="img-responsive zoom-img" alt="">
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <span class="bg-text">P</span>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!--//popular-->
+<!--table-book-->
+<div th:replace="fotter-all.html"></div>
+<script th:src="@{js/homes.js}"></script>
+</body>
+</html>

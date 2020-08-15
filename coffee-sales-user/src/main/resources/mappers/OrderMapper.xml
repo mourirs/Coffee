@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coffee.sales.user.dao.OrderMapper">
+
+    <resultMap id="orderAddress" type="order">
+        <id column="oid" property="oId"/>
+        <result column="uid" property="uId"/>
+        <result column="onumber" property="oNumber"/>
+        <result column="ocratetime" property="oCrateTime"/>
+        <result column="ogold" property="oGold"/>
+        <result column="otransaction" property="oTransaction"/>
+        <result column="aid" property="aId"/>
+        <result column="oname" property="oName"/>
+        <result column="oprice" property="oPrice"/>
+        <result column="onum" property="oNUm"/>
+        <association property="address" javaType="address">
+            <id column="aids" property="aId"/>
+            <result column="uids" property="uId"/>
+            <result column="area" property="area"/>
+            <result column="detailedarea" property="detailedArea"/>
+            <result column="postalcode" property="postalCode"/>
+            <result column="consignee" property="consignee"/>
+            <result column="consigneephone" property="consigneePhone"/>
+        </association>
+    </resultMap>
+
+    <insert id="insertInFo" parameterType="java.util.List" useGeneratedKeys="false">
+        INSERT INTO `coffee`.`cf_order`( `uid`, `onumber`, `ocratetime`, `ogold`, `otransaction`, `aid`, `oname`,
+        `oprice`, `onum`)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.uId},
+            #{item.oNumber},
+            #{item.oCrateTime},
+            #{item.oGold},
+            #{item.oTransaction},
+            #{item.aId},
+            #{item.oName},
+            #{item.oPrice},
+            #{item.oNUm}
+            )
+        </foreach>
+    </insert>
+
+    <select id="orderInFo" parameterType="int" resultMap="orderAddress">
+    SELECT
+        cf_order.oid,
+        cf_order.uid,
+        cf_order.onumber,
+        cf_order.ocratetime,
+        cf_order.ogold,
+        cf_order.otransaction,
+        cf_order.aid,
+        cf_order.oname,
+        cf_order.oprice,
+        cf_order.onum,
+        cf_address.aid aids,
+        cf_address.uid uids,
+        cf_address.area,
+        cf_address.detailedarea,
+        cf_address.postalcode,
+        cf_address.consignee,
+        cf_address.consigneephone
+        FROM
+        cf_order
+        LEFT JOIN cf_address ON cf_order.aid = cf_address.aid
+        WHERE
+        cf_order.uid = #{id}
+    </select>
+
+    <delete id="deleteOrderInFo" parameterType="int">
+        DELETE FROM cf_order WHERE cf_order.oid = #{id}
+    </delete>
+</mapper>

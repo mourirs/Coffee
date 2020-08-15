@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="referrer" content="never">
+    <!-- Site Title -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <link rel="stylesheet" th:href="@{../bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{../bootstrap/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{../css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{../css/main.css}">
+    <script th:src="@{../jquery/jquery-1.9.1.min.js}"></script>
+    <script th:src="@{../jquery/bootstrap-paginator.js}"></script>
+    <script th:src="@{../bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{../script/docs.min.js}"></script>
+    <link rel="stylesheet" th:href="@{../css/element.css}">
+    <script th:src="@{../script/vue.js}"></script>
+    <script th:src="@{../script/element.js}"></script>
+    <script th:src="@{../script/axios.js}"></script>
+    <script th:src="@{../script/dataParse.js}"></script>
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background: #F4F4F4;
+        }
+
+        table tbody td:nth-child(even) {
+            color: #C00;
+        }
+
+        form {
+            margin: 0 0 20px;
+        }
+
+        .pagination-centered {
+            text-align: center;
+        }
+
+        .pagination {
+            margin: 20px 0;
+        }
+
+        .pagination ul {
+            border-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            display: inline-block;
+            margin-bottom: 0;
+            margin-left: 0;
+        }
+
+        ul, ol {
+            margin: 0 0 10px 25px;
+            padding: 0;
+        }
+
+        .pagination ul > li {
+            display: inline;
+        }
+
+        li {
+            line-height: 20px;
+        }
+
+        .pagination ul > li:first-child > a, .pagination ul > li:first-child > span {
+            border-bottom-left-radius: 4px;
+            border-left-width: 1px;
+            border-top-left-radius: 4px;
+        }
+
+        .pagination ul > li:last-child > a, .pagination ul > li:last-child > span {
+            border-bottom-right-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+        .pagination ul > li > a, .pagination ul > li > span {
+            -moz-border-bottom-colors: none;
+            -moz-border-left-colors: none;
+            -moz-border-right-colors: none;
+            -moz-border-top-colors: none;
+            background-color: #fff;
+            border-color: #ddd;
+            border-image: none;
+            border-style: solid;
+            border-width: 1px 1px 1px 0;
+            float: left;
+            line-height: 20px;
+            padding: 4px 12px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .pagination ul > .active > a, .pagination ul > .active > span {
+            color: #999;
+            cursor: default;
+        }
+
+        .pagination ul > li > a:hover, .pagination ul > li > a:focus, .pagination ul > .active > a, .pagination ul > .active > span {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="">POI-COFFEE - 订单监控</a></div>
+        </div>
+        <div th:replace="user-head.html"></div>
+    </div>
+</nav>
+
+<div class="container-fluid" id="app">
+    <div class="row">
+        <div th:replace="user-left.html"></div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table  table-bordered">
+                            <thead>
+                            <tr>
+                                <th width="30"></th>
+                                <th>订单号</th>
+                                <th>创建时间</th>
+                                <th>订单金额</th>
+                                <th>收货人</th>
+                                <th>订单地址</th>
+                                <th>所属用户</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(item,index) in orderPageList" v-if="orderPageList.length > 0">
+                                <td>{{index+1}}</td>
+                                <td>{{item.orderNumber}}</td>
+                                <td>{{item.orderCreateTime}}</td>
+                                <td>{{item.orderGold}}</td>
+                                <td>{{item.orderConsignee}}</td>
+                                <td>{{item.orderArea}}</td>
+                                <td>{{item.orderUserName}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <el-pagination
+                                layout="prev, pager, next"
+                                :total="total"
+                                :current-page="currentPage"
+                                :page-size="pageSize"
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange">
+                        </el-pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let token = $("meta[name='_csrf']").attr("content");
+    let header = $("meta[name='_csrf_header']").attr("content");
+    axios.defaults.headers.common[header] = token;
+    const app = new Vue({
+        el: "#app",
+        data() {
+            return {
+                orderPageList: {},
+                currentPage: 1,// 当前页码
+                pageSize: 10,// 每页大小
+                total: 1,
+            }
+        },
+        methods: {
+            handleSizeChange(val) {
+                this.orderInFo(val);
+            },
+            handleCurrentChange(val) {
+                this.orderInFo(val);
+            },
+            orderInFo(pageNumber) {
+                axios({
+                    method: "post",
+                    url: "/orderAllInFo",
+                    transformRequest: [
+                        function (data) {
+                            return parseParams(data);
+                        }
+                    ],
+                    data: {
+                        pageNumber: pageNumber
+                    }
+                }).then((response) => {
+                    this.orderPageList = response.data.list;
+                    this.currentPage = response.data.pageNum;
+                    this.pageSize = response.data.pageSize;
+                    this.total = response.data.total;
+                })
+            }
+        }, mounted() {
+            this.orderInFo(1);
+        }
+    });
+</script>
+</body>
+</html>

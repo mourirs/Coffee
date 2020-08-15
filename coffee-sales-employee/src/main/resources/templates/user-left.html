@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<div class="col-sm-3 col-md-2 sidebar" th:fragment="user-left">
+    <div class="tree">
+        <ul style="padding-left:0px;" class="list-group">
+            <li class="list-group-item" sec:authorize="hasAnyRole('员工维护','角色维护')">
+                <span><i class="glyphicon glyphicon glyphicon-tasks"></i> 员工维护 </span>
+                <ul style="margin-top:10px;">
+                    <li style="height:30px;" sec:authorize="hasRole('员工维护')">
+                        <a th:href="@{../user/get}"><i class="glyphicon glyphicon-user"></i> 员工维护</a>
+                    </li>
+                    <li style="height:30px;" sec:authorize="hasRole('角色维护')">
+                        <a th:href="@{../role}"><i class="glyphicon glyphicon-certificate"></i> 角色维护</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="list-group-item" sec:authorize="hasAnyRole('订单监控','用户状态监控','用户反馈')">
+                <span><i class="glyphicon glyphicon-ok"></i> 用户监控 </span>
+                <ul style="margin-top:10px;">
+                    <li style="height:30px;" sec:authorize="hasRole('订单监控')">
+                        <a th:href="@{../order_monitoring}"><i class="glyphicon glyphicon-check"></i> 订单监控</a>
+                    </li>
+                    <li style="height:30px;" sec:authorize="hasRole('用户状态监控')">
+                        <a th:href="@{../condition_monitoring}"><i class="glyphicon glyphicon-check"></i> 用户状态监控</a>
+                    </li>
+                    <li style="height:30px;" sec:authorize="hasRole('用户反馈')">
+                        <a th:href="@{../feedback_monitoring}"><i class="glyphicon glyphicon-check"></i> 用户反馈</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+</html>

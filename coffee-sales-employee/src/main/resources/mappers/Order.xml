@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coffee.sales.employee.dao.OrderMapper">
+    <resultMap id="orderInFo" type="order">
+        <result column="orderNumber" property="orderNumber"/>
+        <result column="orderCreateTime" property="orderCreateTime"/>
+        <result column="orderGold" property="orderGold"/>
+        <result column="orderConsignee" property="orderConsignee"/>
+        <result column="orderArea" property="orderArea"/>
+        <result column="orderUserName" property="orderUserName"/>
+    </resultMap>
+
+    <select id="orderAllInFo" resultMap="orderInFo">
+        SELECT
+        cf_order.onumber orderNumber,
+        cf_order.ocratetime orderCreateTime,
+        cf_order.ogold orderGold,
+        cf_address.consignee orderConsignee,
+        cf_address.area orderArea,
+        cf_user.uname orderUserName
+        FROM
+        cf_order LEFT JOIN
+        cf_address ON cf_order.aid = cf_address.aid
+        LEFT JOIN cf_user ON cf_order.uid = cf_user.uid
+    </select>
+
+</mapper>

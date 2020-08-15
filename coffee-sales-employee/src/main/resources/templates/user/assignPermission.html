@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Site Title -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" th:href="@{../bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{../css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{../css/main.css}">
+    <link rel="stylesheet" th:href="@{../css/doc.min.css}">
+    <link rel="stylesheet" th:href="@{../ztree/zTreeStyle.css}">
+    <script th:src="@{../jquery/jquery-1.9.1.min.js}"></script>
+    <script th:src="@{../bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{../script/docs.min.js}"></script>
+    <script th:src="@{../ztree/jquery.ztree.all-3.5.min.js}"></script>
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" >
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="">POI-COFFEE - 角色维护</a></div>
+        </div>
+        <div th:replace="user-head.html"></div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="user-left.html"></div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><i class="glyphicon glyphicon-th-list"></i> 权限分配列表
+                </div>
+                <div class="panel-body">
+                    <button class="btn btn-success" onclick="allot()">分配许可</button>
+                    <br><br>
+
+                    <form >
+                        <input type="hidden" th:value="${id}"  id="hid" >
+                    <div th:each="permission : ${allPermissions}"><input type="checkbox"  th:text="${permission.name}" th:value="${permission.id}"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $(".list-group-item").click(function () {
+            if ($(this).find("ul")) {
+                $(this).toggleClass("tree-closed");
+                if ($(this).hasClass("tree-closed")) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+    });
+    var ids = [[${permissionids}]];
+    for(var j=0;j<ids.length;j++){
+        var pidd = ids[j]
+        $('input[value="'+pidd+'"]').prop('checked',true);
+        $('input[value="'+pidd+'"]').attr('class','old');
+    }
+    function allot(){
+       var roleid = $('#hid').val();
+       var checks =  $('input:checked');
+       var savevalues = new Array();
+       var deletevalues = new Array();
+       for(var i=0;i<checks.length;i++){
+           if($(checks[i]).hasClass('old')){
+               if(!checks[i].checked){
+                   deletevalues.push(checks[i].value)
+               }
+           }else{
+               if(checks[i].checked){
+                   savevalues.push(checks[i].value);
+               }
+           }
+       }
+       savevalues.push(-1);
+       deletevalues.push(-1);
+       var param = {
+           "roleid" : roleid,
+           "savepermissionid" : savevalues,
+           "deletepermissionid" : deletevalues
+       }
+        $.get('../../rolecont/updatePermission',param,function(data){
+            alert(data);
+        })
+    }
+</script>
+</body>
+</html>

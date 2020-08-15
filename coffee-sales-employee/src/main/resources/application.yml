@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    username: root
+    password: 614750226
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url:  jdbc:mysql://127.0.0.1:3306/coffee?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC&allowPublicKeyRetrieval=true
+  thymeleaf:
+    prefix: classpath:/templates/
+mybatis:
+  type-aliases-package: "com.coffee.sales.employee.bean"
+  mapper-locations:
+    - classpath*:mappers/*.xml
+  configuration:
+    use-actual-param-name: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  arams: count=countSql
+server:
+  port: 8080

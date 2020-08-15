@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coffee.sales.employee.dao.ContactMapper">
+    <select id="contactAllInFo" resultType="contact">
+        SELECT
+        cf_contact.conid,
+        cf_contact.conname,
+        cf_contact.conemail,
+        cf_contact.conphone,
+        cf_contact.conmessage
+        FROM
+        cf_contact
+    </select>
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coffee.sales.user.dao.UserMapper">
+    <select id="userLogin" parameterType="user" resultType="boolean">
+        SELECT * FROM `cf_user` WHERE uname = #{uName} AND upwd = #{uPwd}
+    </select>
+
+    <insert id="userRegister" parameterType="user" useGeneratedKeys="true" keyProperty="uId">
+        INSERT INTO `coffee`.`cf_user`(`uname`, `upwd`, `uemail`, `ustate`)
+        VALUES (#{uName}, #{uPwd}, #{uEmail}, 1);
+    </insert>
+
+    <select id="userRetrieve" parameterType="user" resultType="boolean">
+        SELECT * FROM `cf_user`
+        <where>
+            AND uname = #{uName}
+            <if test="uPhone != null and uPhone != '' ">
+                AND uphone = #{uPhone}
+            </if>
+            <if test="uEmail != null and uEmail != '' ">
+                AND uEmail = #{uEmail}
+            </if>
+        </where>
+    </select>
+
+    <update id="userRetrievePassword" parameterType="user">
+        UPDATE `coffee`.`cf_user` SET `upwd` = #{uPwd}
+        WHERE `uname` = #{uName} AND `uemail` = #{uEmail}
+    </update>
+
+    <select id="userInformation" parameterType="user" resultType="user">
+        SELECT * FROM `cf_user`
+        <where>
+            <if test="uName != null and uName != '' ">
+                AND uname = #{uName}
+            </if>
+            <if test="uId != null and uId != '' ">
+                AND uid = #{uId}
+            </if>
+        </where>
+    </select>
+
+    <select id="userCountPhone" parameterType="user" resultType="int">
+        SELECT COUNT(*) FROM `cf_user` WHERE uphone = #{uPhone}
+    </select>
+
+    <update id="userUpdateInformation" parameterType="user">
+        UPDATE `coffee`.`cf_user`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="uName != null and uName != '' ">`uname` = #{uName},</if>
+            <if test="uPwd != null and uPwd != '' ">`upwd` = #{uPwd},</if>
+            <if test="uEmail != null and uEmail != '' ">`uemail` = #{uEmail},</if>
+            <if test="uPhone != null and uPhone != '' ">`uphone` = #{uPhone},</if>
+        </trim>
+        WHERE `uid` = #{uId}
+    </update>
+</mapper>

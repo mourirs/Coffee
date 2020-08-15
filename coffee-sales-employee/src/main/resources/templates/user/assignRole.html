@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Site Title -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" th:href="@{../bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{../css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{../css/main.css}">
+    <link rel="stylesheet" th:href="@{../css/doc.min.css}">
+    <script th:src="@{../jquery/jquery-1.9.1.min.js}"></script>
+    <script th:src="@{../bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{../script/docs.min.js}"></script>
+    <style>
+        .tree li {
+            list-style-type: none;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" >
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <div><a class="navbar-brand" style="font-size:32px;" href="">POI-COFFEE - 员工角色维护</a></div>
+        </div>
+        <div th:replace="user-head.html"></div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="user-left.html"></div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form role="form" class="form-inline">
+                        <input type="hidden" id="userid" th:value="${userid}"/>
+                        <div class="form-group">
+                            <label for="leftselect">未分配角色列表</label><br>
+                            <select  class="form-control" multiple size="10" style="width:175px;overflow-y:auto;" id="leftselect">
+                                <option th:each="allrole:${allRoles}" th:value="${allrole.id}" th:text="${allrole.name}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <ul>
+                                <li onclick="toright()"   class="btn btn-default glyphicon glyphicon-chevron-right"></li>
+                                <br>
+                                <li onclick="toleft()" class="btn btn-default glyphicon glyphicon-chevron-left" style="margin-top:20px;"></li>
+                            </ul>
+                        </div>
+                        <div class="form-group" style="margin-left:40px;">
+                            <label for="rightselect">已分配角色列表</label><br>
+                            <select  class="form-control" multiple size="10" style="width:175px;overflow-y:auto;" id="rightselect">
+                                <option class="old" th:each="role:${roles}"  th:value="${role.id}" th:text="${role.name}"></option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary" style="float:none;" onclick="update()"> 保存</button>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(function () {
+        $(".list-group-item").click(function () {
+            if ($(this).find("ul")) {
+                $(this).toggleClass("tree-closed");
+                if ($(this).hasClass("tree-closed")) {
+                    $("ul", this).hide("fast");
+                } else {
+                    $("ul", this).show("fast");
+                }
+            }
+        });
+    });
+    function toright(){
+       var html =  $('#leftselect :selected').clone();
+        $('#rightselect').append(html);
+        $('#leftselect :selected').remove();
+    }
+    function toleft(){
+        var html =  $('#rightselect :selected').clone();
+        $('#leftselect').append(html);
+        $('#rightselect :selected').remove();
+    }
+    function update(){
+
+        var userid = $('#userid').val();
+        var left = $('#leftselect option');
+        var right = $('#rightselect option');
+        var leftparam = new Array();
+        var rightparam = new Array();
+        for(var i=0;i<left.length;i++){
+            if($(left[i]).hasClass("old")){
+                leftparam.push($(left[i]).val());
+            }
+        }
+        leftparam.push(-1);
+        for(var j=0;j<right.length;j++){
+            if(!$(right[j]).hasClass("old")){
+                rightparam.push($(right[j]).val());
+            }
+        }
+        rightparam.push(-1);
+        var param={
+            "leftparam" : leftparam,
+            "rightparam" : rightparam,
+            "userid" : userid
+        }
+
+
+
+        $.ajax(
+            {
+                url: "../../user/updateRole",
+                type: "post",
+                data: param,
+                datatype: "json",
+                success: function (data) {
+                    alert(data)
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                }
+            }
+        );
+
+
+
+    }
+</script>
+</body>
+</html>

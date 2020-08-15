@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coffee.sales.employee.dao.UserMapper">
+    <resultMap id="user" type="user">
+        <id property="id" column="id"/>
+        <result property="loginAcct" column="loginacct"/>
+        <result property="userPassword" column="userpassword"/>
+        <result property="userName" column="username"/>
+        <result property="email" column="email"/>
+        <result property="createTime" column="createtime"/>
+    </resultMap>
+
+    <resultMap id="userRole" type="user" extends="user">
+        <collection property="roleList" ofType="role">
+            <id property="id" column="ids"/>
+            <result property="name" column="name"/>
+        </collection>
+    </resultMap>
+
+    <select id="findUserRoleByLoginAcct" resultMap="userRole" parameterType="string">
+        SELECT u.id,u.loginacct,u.userpassword,u.username,u.email,u.createtime,tr.id ids,tr.`name` FROM t_user u
+        LEFT JOIN t_user_role ur ON u.id = ur.userid
+        LEFT JOIN t_role tr ON ur.roleid = tr.id
+        WHERE u.loginacct = #{arg0}
+    </select>
+</mapper>

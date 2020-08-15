@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coffee.sales.user.dao.ContactMapper">
+    <insert id="insertInFo" parameterType="contact" useGeneratedKeys="true" keyProperty="conId">
+    INSERT INTO `coffee`.`cf_contact`(`conname`, `conemail`, `conphone`, `conmessage`)
+    VALUES (#{conName}, #{conEmail}, #{conPhone}, #{conMessage})
+</insert>
+</mapper>

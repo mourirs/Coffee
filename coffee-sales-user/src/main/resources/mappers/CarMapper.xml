@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coffee.sales.user.dao.CarMapper">
+
+    <resultMap id="car" type="car">
+        <id column="cid" property="cId"/>
+        <result column="uid" property="uId"/>
+        <result column="cyid" property="yId"/>
+        <result column="cnum" property="cNum"/>
+    </resultMap>
+
+    <resultMap id="carGoods" type="car" extends="car">
+        <association property="commodity" javaType="commodity">
+            <id column="yid" property="yId"/>
+            <result column="yname" property="yName"/>
+            <result column="yprice" property="yPrice"/>
+            <result column="ygrounding" property="yGrounding"/>
+            <result column="ynum" property="yNum"/>
+            <result column="ytid" property="yTId"/>
+            <result column="yimage" property="yimage"/>
+        </association>
+    </resultMap>
+
+    <insert id="addCar" useGeneratedKeys="true" keyProperty="cId" parameterType="car">
+        INSERT INTO `coffee`.`cf_car`(`uid`, `yid`, `cnum`) VALUES ( #{uId}, #{yId}, #{cNum})
+    </insert>
+
+    <select id="addCarCount" parameterType="car" resultType="int">
+        SELECT COUNT(*) FROM cf_car WHERE cf_car.uid = #{uId} AND cf_car.yid = #{yId}
+    </select>
+
+    <select id="carId" parameterType="car" resultType="car">
+        SELECT * FROM cf_car WHERE cf_car.uid = #{uId} AND cf_car.yid = #{yId}
+    </select>
+
+    <update id="updateCar" parameterType="car">
+        UPDATE `coffee`.`cf_car`
+        SET `cnum`= #{cNum} WHERE `cid`= #{cId}
+    </update>
+
+    <select id="carForUid" parameterType="int" resultMap="carGoods">
+        SELECT
+        cf_car.cid,
+        cf_car.uid,
+        cf_car.yid AS cyid,
+        cf_car.cnum,
+        cf_commodity.yid,
+        cf_commodity.yname,
+        cf_commodity.yprice,
+        cf_commodity.ygrounding,
+        cf_commodity.ynum,
+        cf_commodity.ytid,
+        cf_commodity.yimage
+        FROM
+        cf_car LEFT JOIN
+        cf_commodity
+        ON cf_car.yid = cf_commodity.yid
+        WHERE cf_car.uid = #{id}
+    </select>
+
+    <delete id="deleteCarForCId" parameterType="int">
+        DELETE FROM cf_car WHERE cf_car.cid = #{id}
+    </delete>
+
+    <delete id="deleteCarForIdIsListId" parameterType="java.util.List">
+        DELETE FROM cf_car WHERE cf_car.cid IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

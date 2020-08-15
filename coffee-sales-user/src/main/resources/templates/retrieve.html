@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Retrieve</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link th:href="@{css/bootstrap.css}" type="text/css" rel="stylesheet" media="all">
+    <link th:href="@{css/style.css}" type="text/css" rel="stylesheet" media="all">
+    <script th:src="@{js/jquery-3.4.1.js}"></script>
+    <link th:href='@{fonts/Aladin-Fonts.css}' rel='stylesheet' type='text/css'/>
+    <link th:href="@{css/animate.css}" rel="stylesheet" type="text/css" media="all">
+    <link rel="stylesheet" th:href="@{css/element.css}">
+    <script th:src="@{js/vue.js}"></script>
+    <script th:src="@{js/element.js}"></script>
+    <script th:src="@{js/axios.js}"></script>
+    <script th:src="@{js/dataParse.js}"></script>
+</head>
+<body>
+<!--banner-->
+<div class="banner about-bnr">
+    <div class="bnr-img">
+        <img class="wow fadeInLeftBig animated" data-wow-delay=".5s" src="images/a.png" alt=""/>
+    </div>
+    <div th:replace="top-list.html"></div>
+    <div class="banner-text">
+        <h1 class="wow fadeInDown animated" data-wow-delay=".5s"><a th:href="@{index}">POI - Coffee </a></h1>
+        <h2 class="wow fadeInUp animated" data-wow-delay=".5s"><a th:href="@{index}">主页</a> / 找回密码</h2>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<!--//banner-->
+<!-- gallery -->
+<div id="app" style="margin-bottom: 200px">
+    <div class="container" style="margin-top: 20px; position: relative;">
+        <h4 class="title">RETRIEVE</h4>
+        <h3 class="title1">START <span>YOUR</span>COFFEE JOURNEY</h3>
+        <div style="margin-top: 50px">
+            <el-steps :active="active" align-center>
+                <el-step title="步骤1" description="请输入需要找回的用户名"></el-step>
+                <el-step title="步骤2" description="请输入账号使用过的密码"></el-step>
+                <el-step title="步骤3" description="请输入手机号码或注册邮箱（任一即可）"></el-step>
+            </el-steps>
+        </div>
+        <div class="col-lg-6 in-gp-tl" style="position: absolute;left: 25%;margin-top: 100px">
+            <div v-if="active == 1">
+                <div class="input-group">
+                     <span class="input-group-addon">
+                                用户名：
+							</span>
+                    <input type="text" class="form-control" placeholder="请输入需要找回的用户名" v-model="uName">
+                </div>
+            </div>
+            <div v-if="active == 2">
+                <div class="input-group">
+                     <span class="input-group-addon">
+                                密&nbsp;&nbsp;&nbsp;&nbsp;码：
+							</span>
+                    <input type="password" class="form-control" placeholder="请输入账号使用过的密码" v-model="uPwd">
+                </div>
+            </div>
+            <div v-if="active == 3">
+                <div class="input-group">
+                     <span class="input-group-addon">
+                                手机号：
+							</span>
+                    <input type="text" class="form-control" placeholder="手机号与邮箱输入任一即可" v-model="uPhone"
+                           :disabled="uEmail !== ''">
+                </div>
+                <div class="input-group">
+                     <span class="input-group-addon">
+                                邮&nbsp;&nbsp;&nbsp;&nbsp;箱：
+							</span>
+                    <input type="email" class="form-control" placeholder="手机号与邮箱输入任一即可" v-model="uEmail"
+                           :disabled="uPhone !== ''">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="height: 50px; position: relative;">
+        <div style="position: absolute; left:42.5%;margin-top: 200px;">
+            <el-button @click="previous()">上一步</el-button>
+            <el-button @click="next()" v-show="active != 3">下一步</el-button>
+            <el-button @click="success()" v-show="active == 3">完&nbsp;&nbsp;&nbsp;&nbsp;成</el-button>
+        </div>
+    </div>
+
+    <el-dialog title="重置密码" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+            <el-form-item label="新密码" :label-width="formLabelWidth">
+                <el-input type="password" v-model="form.newPwd" autocomplete="off"
+                          placeholder="UserPassWord:数字、字母、符号至少包含两种,长度为8-16位"></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码" :label-width="formLabelWidth">
+                <el-input type="password" v-model="form.aNewPwd" autocomplete="off" placeholder="请再次输入密码"></el-input>
+            </el-form-item>
+        </el-form>
+        <el-dialog
+                width="30%"
+                title="密码设置错误"
+                :visible.sync="innerVisible"
+                append-to-body>
+            请检查两次输入的密码是否一致或密码格式是否正确。
+        </el-dialog>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="retrievePwd()">确 定</el-button>
+        </div>
+    </el-dialog>
+
+</div>
+<div th:replace="fotter-all.html"></div>
+<script th:src="@{js/retrieve.js}"></script>
+</body>
+</html>

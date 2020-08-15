@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coffee.sales.employee.dao.RoleMapper">
+
+    <resultMap id="role" type="role">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+    <resultMap id="rolePermission" type="role" extends="role">
+        <collection property="permissionList" ofType="permission" >
+            <id column="ids" property="id"/>
+            <result column="pid" property="pid"/>
+            <result column="pname" property="name"/>
+            <result column="icon" property="icon"/>
+            <result column="url" property="url"/>
+        </collection>
+    </resultMap>
+
+    <select id="findRolePermissionById" resultMap="rolePermission" parameterType="int">
+        SELECT r.*,p.id ids,p.pid,p.`name` pname,p.icon,p.url FROM t_role r
+        LEFT JOIN t_role_permission rp ON r.id = rp.roleid
+        LEFT JOIN t_permission p ON rp.permissionid = p.id
+        WHERE r.id = #{arg0}
+    </select>
+
+</mapper>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link th:href="@{css/bootstrap.css}" type="text/css" rel="stylesheet" media="all">
+    <link th:href="@{css/style.css}" type="text/css" rel="stylesheet" media="all">
+    <script th:src="@{js/jquery-3.4.1.js}"></script>
+    <link th:href='@{fonts/Aladin-Fonts.css}' rel='stylesheet' type='text/css'/>
+    <link th:href="@{css/animate.css}" rel="stylesheet" type="text/css" media="all">
+    <link rel="stylesheet" th:href="@{css/element.css}">
+    <script th:src="@{js/vue.js}"></script>
+    <script th:src="@{js/element.js}"></script>
+    <script th:src="@{js/axios.js}"></script>
+    <script th:src="@{js/dataParse.js}"></script>
+    <style>
+        .btn {
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+<!--banner-->
+<div class="banner about-bnr">
+    <div class="bnr-img">
+        <img class="wow fadeInLeftBig animated" data-wow-delay=".5s" src="images/a.png" alt=""/>
+    </div>
+    <div th:replace="top-list.html"></div>
+    <div class="banner-text">
+        <h1 class="wow fadeInDown animated" data-wow-delay=".5s"><a th:href="@{index}">POI - Coffee </a></h1>
+        <h2 class="wow fadeInUp animated" data-wow-delay=".5s"><a th:href="@{index}">主页</a> / 登录</h2>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<!--//banner-->
+<!-- gallery -->
+<div id="app" style="margin-bottom: 100px">
+    <div class="container" style="margin-top: 20px; position: relative;">
+        <h4 class="title">LOGIN</h4>
+        <h3 class="title1">START <span>YOUR</span>COFFEE JOURNEY</h3>
+        <div style="margin-top: 100px">
+            <div class="input-group input-group-lg wow fadeInDown animated" data-wow-delay=".5s">
+                <span class="input-group-addon" id="basic-addon1">用户名：</span>
+                <input type="text" class="form-control" placeholder="Username:只能包括数字字母的组合，长度为4-15位"
+                       aria-describedby="basic-addon1"
+                       id="username" v-model="uName">
+            </div>
+            <div class="input-group input-group-lg wow fadeInDown animated" data-wow-delay=".5s">
+                <span class="input-group-addon" id="basic-addon2">密&nbsp;&nbsp;&nbsp;&nbsp;码：</span>
+                <input type="password" class="form-control" placeholder="UserPassWord:数字、字母、符号至少包含两种,长度为8-16位"
+                       aria-describedby="basic-addon1"
+                       id="password" v-model="uPwd">
+            </div>
+        </div>
+    </div>
+    <div style="height: 50px; position: relative;">
+        <div class="btn-group" role="group" style="position: absolute; left:42%;margin-top: 60px;">
+            <button type="button" class="btn btn-default" @click="login()">登录</button>
+            <button type="button" class="btn btn-default" @click="register()">注册</button>
+            <button type="button" class="btn btn-default" @click="retrieve()">忘记密码</button>
+        </div>
+    </div>
+</div>
+<div th:replace="fotter-all.html"></div>
+<script th:src="@{js/login.js}"></script>
+</body>
+</html>

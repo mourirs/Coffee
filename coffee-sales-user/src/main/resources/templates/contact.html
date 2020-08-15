@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Contact</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link th:href="@{css/bootstrap.css}" type="text/css" rel="stylesheet" media="all">
+    <link th:href="@{css/style.css}" type="text/css" rel="stylesheet" media="all">
+    <script th:src="@{js/jquery-3.4.1.js}"></script>
+    <link th:href='@{fonts/Aladin-Fonts.css}' rel='stylesheet' type='text/css'/>
+    <link th:href="@{css/animate.css}" rel="stylesheet" type="text/css" media="all">
+    <link rel="stylesheet" th:href="@{css/element.css}">
+    <script th:src="@{js/vue.js}"></script>
+    <script th:src="@{js/element.js}"></script>
+    <script th:src="@{js/axios.js}"></script>
+    <script th:src="@{js/dataParse.js}"></script>
+</head>
+<body>
+<!--banner-->
+<div class="banner about-bnr">
+    <div class="bnr-img">
+        <img class="wow fadeInLeftBig animated" data-wow-delay=".5s" src="images/a.png" alt=""/>
+    </div>
+    <div th:replace="top-list.html"></div>
+    <div class="banner-text">
+        <h1 class="wow fadeInDown animated" data-wow-delay=".5s"><a th:href="@{index}">POI - Coffee </a></h1>
+        <h2 class="wow fadeInUp animated" data-wow-delay=".5s"><a th:href="@{index}">主页</a> / 登录</h2>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<!--//banner-->
+<!-- gallery -->
+<div id="app" style="margin-bottom: 100px">
+    <div class="container" style="margin-top: 20px; position: relative;">
+        <h4 class="title wow fadeInDown animated" data-wow-delay=".5s">Contact Us</h4>
+        <h3 class="title1 wow fadeInDown animated" data-wow-delay=".5s">LOCATION OF OUR <span>ESPR</span>ESSO </h3>
+        <span class="bg-text">C</span>
+
+        <div class="contact-form">
+            <div class="col-md-5 contact-left">
+                <div class="address wow fadeInLeft animated" data-wow-delay=".5s">
+                    <h5>Address:</h5>
+                    <p><i class="glyphicon glyphicon-home"></i> xxx xxx xx xxx xxx, xx xxxxx</p>
+                </div>
+                <div class="address address-mdl wow fadeInLeft animated" data-wow-delay=".5s">
+                    <h5>Phones:</h5>
+                    <p><i class="glyphicon glyphicon-earphone"></i> +8888888888</p>
+                    <p><i class="glyphicon glyphicon-phone"></i> +8888888888</p>
+                </div>
+                <div class="address wow fadeInLeft animated" data-wow-delay=".5s">
+                    <h5>Email:</h5>
+                    <p><i class="glyphicon glyphicon-envelope"></i> <a href="mailto:info@example.com">xxx@xxx.com</a>
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-7 contact-right wow fadeInRight animated" data-wow-delay=".5s">
+                <h5>Miscellaneous information:</h5>
+                <p>告诉我们您遇到的困难 </p>
+                <input type="text" placeholder="Name" required="" v-model="name">
+                <input class="email" type="text" placeholder="Email" required="" v-model="email">
+                <input type="text" placeholder="Phone" required="" v-model="phone">
+                <textarea placeholder="Message" required="" v-model="message"></textarea>
+                <input class="wow zoomIn animated" data-wow-delay=".5s" type="submit" @click="insertInFo()" value="提交">
+                <input class="wow zoomIn animated" data-wow-delay=".5s" type="reset" value="重置">
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div th:replace="fotter-all.html"></div>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data() {
+            return {
+                name: "",
+                email: "",
+                phone: "",
+                message: ""
+            }
+        },
+        methods: {
+            insertInFo() {
+                axios({
+                    method: "post",
+                    url: "/contactInFo",
+                    transformRequest: [
+                        function (data) {
+                            return parseParams(data);
+                        }
+                    ],
+                    data: {
+                        conMessage: this.message,
+                        conPhone: this.phone,
+                        conEmail: this.email,
+                        conName: this.name
+                    }
+                }).then((response) => {
+                    if (response.data) {
+                        this.$notify({
+                            title: '提交成功',
+                            message: '提交信息成功！',
+                            position: 'bottom-right'
+                        });
+                    } else {
+                        this.$notify({
+                            title: '提交失败',
+                            message: '请稍后重试！',
+                            position: 'bottom-right'
+                        });
+                    }
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

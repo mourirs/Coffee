@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<div class="top-nav" th:fragment="top-list">
+    <span class="menu"><img src="images/menu-icon.png" alt=""/></span>
+    <ul class="nav1 menu-list">
+        <li class="menu-item"><a class="menu-link" th:href="@{index}">主页</a></li>
+        <li class="menu-item" th:switch="${session.userName} != null">
+            <a th:case="false" class="menu-link" th:href="@{login}">登录</a>
+            <a th:case="true" class="menu-link" th:href="@{userLogout}">注销</a>
+        </li>
+        <li class="menu-item"><a class="menu-link" th:href="@{information}">我的信息</a></li>
+        <li class="menu-item"><a class="menu-link" th:href="@{shopping}">购物</a></li>
+        <li class="menu-item"><a class="menu-link" th:href="@{shoppingCar}">购物车</a></li>
+        <li class="menu-item"><a class="menu-link" th:href="@{address}">地址管理</a></li>
+        <li class="menu-item"><a class="menu-link" th:href="@{orderInFo}">订单信息</a></li>
+    </ul>
+    <div class="clearfix"></div>
+    <!-- script-for-menu -->
+    <script>
+        $("span.menu").click(function () {
+            $("ul.nav1").slideToggle(300, function () {
+                // Animation complete.
+            });
+        });
+    </script>
+    <!-- /script-for-menu -->
+</div>
+</html>
