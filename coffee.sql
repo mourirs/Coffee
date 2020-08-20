@@ -31,7 +31,7 @@ INSERT INTO `cf_address` VALUES (9, 2, '中国辽宁省朝阳市朝阳县', '巨
 INSERT INTO `cf_address` VALUES (10, 2, '中国辽宁省朝阳市朝阳县', '巨魔巢穴', '666666', '烫烫烫烫烫', '18888888878');
 INSERT INTO `cf_address` VALUES (12, 2, '中国辽宁省朝阳市朝阳县', '巨魔巢穴', '666666', '正义哥斯拉', '18888888876');
 INSERT INTO `cf_address` VALUES (13, 2, '中国辽宁省朝阳市朝阳县', '巨魔巢穴', '666666', '德莉莎·观星', '18888888875');
-INSERT INTO `cf_address` VALUES (16, 2, '中国河北省秦皇岛市北戴河区', '巨魔巢穴', '450000', '胡德', '18888888159');
+INSERT INTO `cf_address` VALUES (16, 2, '中国河北省秦皇岛市北戴河区', '巨魔巢穴', '450000', '胡德', '18888888159'); 
 
 -- ----------------------------
 -- Table structure for cf_car
